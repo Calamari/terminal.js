@@ -1,0 +1,55 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>A Terminal mimic :: Georg Tavonius</title>
+  <meta property="og:title" content="Homepage of Georg Tavonius">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="http://jaz-lounge.com">
+  <meta property="og:image" content="http://jaz-lounge.com/screen.png">
+  <meta property="og:image" content="https://fbcdn-profile-a.akamaihd.net/hprofile-ak-snc4/41500_641515269_3177_n.jpg">
+  <link href="example/example.css" type="text/css" rel="stylesheet" charset="utf-8">
+</head>
+<body>
+  <div id="repl-text" class="terminal"></div>
+  <textarea id="intro" style="display:none">
+    Knock, knock... #{SLEEP:500}
+    Why I wrote this? #{SLEEP:340}
+    In 3 words: Because I can. #{SLEEP:200}
+
+    A Link to <a href="https://github.com/calamari">Github</a>. #{SLEEP:200}
+    This is an example.
+  </textarea>
+
+  <section id="help">
+    <h2>Commands to try out:</h2>
+    <ul>
+      <li>intro</li>
+      <li>help</li>
+      <li>load example/another_color.css</li>
+      <li>yql SELECT * FROM geo.places WHERE text="Hamburg, Germany"</li>
+    </ul>
+  </section>
+
+  <script src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
+  <script src="bower_components/tabular.js/tabular_browser.js"></script>
+  <script src="src/terminal.js"></script>
+  <script src="src/type_script.js"></script>
+  <script src="src/commands.js"></script>
+  <script>
+    $(document).ready(function() {
+      Terminal.addCommand('intro', 'Plays my intro scripts, you already have seen.', function(args, done) {
+        var skript = new TypeScript($('#intro').val());
+        skript.run(this, done);
+      });
+
+      var terminal = new Terminal('#repl-text', {
+        onStart: function() {
+          //this.evalInput('intro');
+          this.prompt();
+        }
+      });
+    });
+  </script>
+</body>
+</html>

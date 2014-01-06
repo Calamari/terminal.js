@@ -1,0 +1,27 @@
+{
+  "name": "terminal.js",
+  "version": "0.2.0",
+  "authors": [
+    "Calamari <g.tavonius@gmail.com>"
+  ],
+  "description": "JS mimicking a terminal with additional scripted writing capabilities",
+  "main": "terminal.js",
+  "keywords": [
+    "terminal",
+    "javascript",
+    "cli",
+    "command line interface"
+  ],
+  "license": "MIT",
+  "homepage": "http://github.com/Calamari/terminal.js",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "tabular.js": "/Users/calamari/Dropbox/coding/tabular.js"
+  }
+}
