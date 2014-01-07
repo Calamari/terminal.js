@@ -85,51 +85,17 @@
       this.appendLine('Usage: load FILE_URL');
       done();
     } else {
-      var filename  = args,
-          isCSS     = /\.css$/.test(filename),
-          parent    = doc.getElementsByTagName('body')[0],
-          script    = doc.createElement(isCSS ? 'link' : 'script'),
+      var terminal  = this;
 
-          terminal  = this,
-          isRunning = true,
-
-          scriptLoad = function scriptLoad(event) {
-            if (isRunning) {
-              isRunning = false;
-              terminal.appendLine('Done.');
-              done();
-            }
-          },
-          scriptError = function scriptError() {
-            if (isRunning) {
-              isRunning = false;
-              terminal.appendLine('Failed. Sorry');
-              done();
-            }
-          };
-
-      if (script.attachEvent &&
-        !(script.attachEvent.toString && script.attachEvent.toString().indexOf('[native code') < 0)) {
-
-        // TODO: Test this in IE and Opera
-        script.attachEvent('onreadystatechange', scriptLoad);
-      } else {
-        script.addEventListener('load', scriptLoad, false);
-        script.addEventListener('error', scriptError, false);
-      }
-
-      terminal.appendLine('Loading script: ' + filename);
-      if (isCSS) {
-        script.type = 'text/css';
-        script.rel  = 'stylesheet';
-        script.href = filename;
-      } else {
-        script.src = filename;
-      }
-      parent.appendChild(script);
-
-      // If script is not loaded within 2 seconds, we deem it failed
-      setTimeout(scriptError, 2000);
+      terminal.appendLine('Loading script: ' + args);
+      Terminal.utils.loadFile(args, function loadFileCallback(err, event) {
+        if (err) {
+          terminal.appendLine('Failed. Sorry');
+        } else {
+          terminal.appendLine('Done.');
+        }
+        done();
+      });
 
     }
   });
