@@ -1,20 +1,6 @@
 (function(win, doc, Terminal) {
   'use strict';
 
-  function createCORSRequest(method, url){
-    var xhr = new XMLHttpRequest();
-    if ("withCredentials" in xhr) {
-      xhr.open(method, url, true);
-    } else
-      if (typeof XDomainRequest != "undefined") {
-        xhr = new XDomainRequest();
-        xhr.open(method, url);
-      } else {
-        xhr = null;
-      }
-    return xhr;
-  }
-
   Terminal.addCommand('commands', 'Just prints a list of all available commands. Use "help" for more info.', function(args, done) {
     this.appendLine('All available commands: ' + Object.keys(Terminal.Commands).join(', '));
     done();
@@ -74,7 +60,7 @@
       this.appendLine('Usage: yql SELECT * FROM geo.places WHERE text="Hamburg, Germany"');
       done();
     } else {
-      var request = createCORSRequest('get', 'http://query.yahooapis.com/v1/public/yql?q=' + encodeURIComponent(args) + '&diagnostics=true&format=json'),
+      var request = Terminal.utils.createCORSRequest('get', 'http://query.yahooapis.com/v1/public/yql?q=' + encodeURIComponent(args) + '&diagnostics=true&format=json'),
           terminal = this;
       if (request) {
         terminal.appendLine('Sending YQL query: ' + args);

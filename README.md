@@ -11,8 +11,11 @@ Things I might do in the future:
 
 - *Write tests*
 - js command that starts a js eval interpreter
+- autocompletion support
 - Regex Commands
 - Basic bash scripting capabilities, like pipes and stuff
+- Commands:
+  - API-Testing commands?
 
 
 ## Want to things with it or help out?
