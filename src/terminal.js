@@ -231,7 +231,21 @@
         this.hiddenInput.focus();
       }.bind(this));
     }
-    this.inputListener = this.hiddenInput.on('keyup', this.listenInput.bind(this));
+    this.enable();
+  };
+
+  Terminal.prototype.enable = function enable() {
+    if (!this.isListening) {
+      this.hiddenInput.on('keyup', this.listenInput.bind(this));
+      this.isListening = true;
+      this.element.removeClass('disabled');
+    }
+  };
+
+  Terminal.prototype.disable = function disable() {
+    this.hiddenInput.off('keyup');
+    this.isListening = false;
+    this.element.addClass('disabled');
   };
 
 

@@ -74,6 +74,10 @@ a {
   vertical-align: top;
 }
 
+.terminal.disabled .caret {
+  opacity: 0;
+}
+
 .terminal .prompt {
   margin-right: 0em;
 }

@@ -44,7 +44,7 @@
         skript.run(this, done);
       });
 
-      var terminal = new Terminal('#repl-text', {
+      window.terminal = new Terminal('#repl-text', {
         onStart: function() {
           //this.evalInput('intro');
           this.prompt();
