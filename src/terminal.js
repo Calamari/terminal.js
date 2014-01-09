@@ -236,13 +236,15 @@
 
   Terminal.prototype.enable = function enable() {
     if (!this.isListening) {
-      this.hiddenInput.on('keyup', this.listenInput.bind(this));
+      this.hiddenInput.on('keydown', this.listenInput.bind(this));
+      this.hiddenInput.on('keyup', function() { this.checkInputValue() }.bind(this));
       this.isListening = true;
       this.element.removeClass('disabled');
     }
   };
 
   Terminal.prototype.disable = function disable() {
+    this.hiddenInput.off('keydown');
     this.hiddenInput.off('keyup');
     this.isListening = false;
     this.element.addClass('disabled');
