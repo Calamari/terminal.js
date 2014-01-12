@@ -174,6 +174,7 @@
 
   Terminal.prototype.listenInput = function listenInput(event) {
     var input = this.hiddenInput.val(),
+        self = this,
         caretPos;
     // console.log("key", event.which, event);
 
@@ -187,7 +188,10 @@
           this.promptElement.remove();
           this.nextLine();
 
-          this.evalInput(input.trim());
+          setTimeout(function() {
+            // Call the commands async after this keydown is worked through
+            self.evalInput(input.trim());
+          }, 10);
           break;
         case 38: // Arrow UP
           this.hiddenInput.val(this.history.prev());

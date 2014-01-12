@@ -130,26 +130,28 @@
   };
 
   TypeScript.prototype.startListening = function startListening() {
-    var self = this;
-    this._listener = $(doc).on('keydown', function(event) {
-      switch(event.which) {
-        case 32: // Space
-        case 13: // Enter
-          if (!self.faster) {
-            // fasten up
-            self.faster = true;
-            self.typingSpeed /= 2;
-            self.typingVariance /= 2;
-          } else {
-            // instant
-            self.instant = true;
-          }
-      }
-    });
+    this.keyDownListener = this.keyDownListener.bind(this);
+    this.terminal.hiddenInput.on('keydown', this.keyDownListener);
+  };
+
+  TypeScript.prototype.keyDownListener = function(event) {
+    switch(event.which) {
+      case 32: // Space
+      case 13: // Enter
+        if (!this.faster) {
+          // fasten up
+          this.faster = true;
+          this.typingSpeed /= 2;
+          this.typingVariance /= 2;
+        } else {
+          // instant
+          this.instant = true;
+        }
+    }
   };
 
   TypeScript.prototype.stopListening = function stopListening() {
-    this._listener && this._listener.off();
+    this.terminal.hiddenInput.off('keydown', this.keyDownListener);
   };
 
   TypeScript.prototype.run = function runTypeScript(terminal, done) {
