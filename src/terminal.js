@@ -43,10 +43,11 @@
 
     config = config || {};
     this.limit = config.limit || 1000;
+    this.sessionKey = config.sessionKey || 'terminalHistory';
 
     if (this.CAN_USE_LOCALSTORAGE) {
       try {
-        this.storage = JSON.parse(localStorage.getItem('terminalHistory')) || [];
+        this.storage = JSON.parse(localStorage.getItem(this.sessionKey)) || [];
       } catch(ex) {
         this.storage = [];
       }
@@ -67,7 +68,7 @@
 
   History.prototype.saveHistory = function saveHistory(cmd) {
     if (this.CAN_USE_LOCALSTORAGE) {
-      localStorage.setItem('terminalHistory', JSON.stringify(this.storage));
+      localStorage.setItem(this.sessionKey, JSON.stringify(this.storage));
     }
   };
 
@@ -103,7 +104,9 @@
     config = config || {};
     this.element = $(element);
 
-    this.history = new History();
+    this.history = new History({
+      sessionKey: (config.sessionKey || 'Terminal') + '.history'
+    });
     this.tempInput = null;
 
     this.createPrompt(config.prompt || '$');
@@ -279,11 +282,11 @@
     this.nextLine();
   };
 
-  Terminal.prototype.nextLine = function nextLine(text) {
+  Terminal.prototype.nextLine = function nextLine() {
     this.element.append('<p></p>');
     this.element.find('p:last').append(this.caret);
     // this neat trick scrolls down
-    win.scrollTo(0,$(doc).height())
+    win.scrollTo(0, $(doc).height());
   };
 
   Terminal.prototype.currentLine = function currentLine() {

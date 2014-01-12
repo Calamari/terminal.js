@@ -45,6 +45,7 @@
       });
 
       window.terminal = new Terminal('#repl-text', {
+        sessionKey: 'exampleSession',
         onStart: function() {
           //this.evalInput('intro');
           this.prompt();
