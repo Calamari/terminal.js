@@ -240,6 +240,10 @@
 
   Terminal.prototype.enable = function enable() {
     if (!this.isListening) {
+      if (this.valBeforeDisable !== null) {
+        this.hiddenInput.val(this.valBeforeDisable);
+        delete this.valBeforeDisable;
+      }
       this.hiddenInput.on('keydown', this.listenInput.bind(this));
       this.hiddenInput.on('keyup', function() { this.checkInputValue() }.bind(this));
       this.isListening = true;
@@ -250,6 +254,7 @@
   Terminal.prototype.disable = function disable() {
     this.hiddenInput.off('keydown');
     this.hiddenInput.off('keyup');
+    this.valBeforeDisable = this.hiddenInput.val();
     this.isListening = false;
     this.element.addClass('disabled');
   };
