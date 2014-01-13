@@ -54,6 +54,17 @@
         }
       });
 
+      Terminal.addCommand({
+        test: function(cmd) {
+          return /ing/.test(cmd);
+        },
+        run: function(args, done) {
+          console.log(args);
+          this.appendLine('test overriden!');
+          done();
+        }
+      });
+
       window.terminal = new Terminal('#repl-text', {
         sessionKey: 'exampleSession',
         onStart: function(next) {

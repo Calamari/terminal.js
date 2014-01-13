@@ -147,6 +147,18 @@
     }
   };
 
+  Terminal.checkRegexCommands = function checkRegexCommands(cmd) {
+    var result = null;
+    $.each(Terminal.RegexCommands, function(i, cmdObj) {
+      console.log(arguments);
+      if (cmdObj.test(cmd)) {
+        result = cmdObj;
+        return true;
+      }
+    });
+    return result;
+  };
+
   Terminal.prototype.evalInput = function evalInput(input) {
     if (input.trim() === '') {
       return this.prompt();
@@ -155,11 +167,16 @@
 
     var split = input.split(' '),
         cmd   = split[0],
-        args  = input.substr(cmd.length + 1);
+        args  = input.substr(cmd.length + 1),
+        testedCmd = Terminal.checkRegexCommands(cmd);
 
     this.history.add(input);
 
-    if (Terminal.Commands[cmd] || Terminal.Aliases[cmd]) {
+    if (testedCmd) {
+      testedCmd.run.apply(this, [args, function() {
+        this.prompt();
+      }.bind(this)]);
+    } else if (Terminal.Commands[cmd] || Terminal.Aliases[cmd]) {
       this.runCommand(cmd, [args, function() {
         this.prompt();
       }.bind(this)]);
@@ -293,12 +310,24 @@
    */
   Terminal.Aliases = {};
 
+  /**
+   * Contains all named commands
+   */
+  Terminal.Commands = {};
+
+  /**
+   * Contains all commands that run when matching a test
+   */
+  Terminal.RegexCommands = [];
+
   Terminal.addAlias = function addAlias(name, alias) {
     Terminal.Aliases[alias] = name;
   };
 
   Terminal.addCommand = function addCommand(name, desc, runFunc) {
-    if (arguments.length === 2) {
+    if (arguments.length === 1) { // regex command
+      Terminal.RegexCommands.push(name);
+    } else if (arguments.length === 2) {
       if ($.isFunction(desc)) {
         if (typeof desc === 'string') {
           Terminal.addAlias(name, desc);
@@ -325,7 +354,6 @@
     }
   };
 
-  Terminal.Commands = {};
 
   win.Terminal = Terminal;
 }(window, document));
