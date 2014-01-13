@@ -113,9 +113,10 @@
     this.initCaret();
     this.registerListeners();
     if (config.onStart) {
-      config.onStart.apply(this, function() {
-        this.prompt();
-      }.bind(this));
+      var self = this;
+      config.onStart(function() {
+        self.prompt();
+      });
     } else {
       this.prompt();
     }

@@ -33,6 +33,7 @@
 
   <script src="bower_components/jquery/jquery.min.js"></script>
   <script src="bower_components/tabular.js/tabular_browser.js"></script>
+  <script src="src/polyfills/function.bind.js"></script>
   <script src="src/terminal.js"></script>
   <script src="src/utils.js"></script>
   <script src="src/type_script.js"></script>
@@ -44,11 +45,19 @@
         skript.run(this, done);
       });
 
+      Terminal.addCommand('test', {
+        desc: 'Just for testing',
+        run: function(args, done) {
+          this.appendLine('test successful!');
+          done();
+        }
+      });
+
       window.terminal = new Terminal('#repl-text', {
         sessionKey: 'exampleSession',
-        onStart: function() {
+        onStart: function(next) {
           //this.evalInput('intro');
-          this.prompt();
+          next();
         }
       });
     });
