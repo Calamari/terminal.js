@@ -1,6 +1,6 @@
 {
   "name": "terminal.js",
-  "version": "0.2.3",
+  "version": "0.3.0",
   "description": "JS mimicking a terminal with additional scripted writing capabilities",
   "scripts": {
     "test": "grunt test"
