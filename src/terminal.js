@@ -140,16 +140,10 @@
   };
 
   Terminal.prototype.runCommand = function runCommand(cmd, args) {
-    if (typeof Terminal.Commands[cmd] === 'string') {
-      this.runCommand(Terminal.Commands[cmd], args);
-    } else {
-      if (Terminal.Commands[cmd].run) {
-        Terminal.Commands[cmd].run.apply(this, args);
-      } else if (Terminal.Commands[cmd].aliasFor) {
-        this.runCommand(Terminal.Commands[cmd].aliasFor, args);
-      } else {
-        Terminal.Commands[cmd].apply(this, args);
-      }
+    if (Terminal.Commands[cmd]) {
+      Terminal.Commands[cmd].run.apply(this, args);
+    } else if (Terminal.Aliases[cmd]) {
+      this.runCommand(Terminal.Aliases[cmd], args);
     }
   };
 
@@ -165,7 +159,7 @@
 
     this.history.add(input);
 
-    if (Terminal.Commands[cmd]) {
+    if (Terminal.Commands[cmd] || Terminal.Aliases[cmd]) {
       this.runCommand(cmd, [args, function() {
         this.prompt();
       }.bind(this)]);
@@ -294,22 +288,41 @@
     return this.element.find('p:last');
   };
 
+  /**
+   * Contains all defined aliases for faster access
+   */
+  Terminal.Aliases = {};
+
+  Terminal.addAlias = function addAlias(name, alias) {
+    Terminal.Aliases[alias] = name;
+  };
+
   Terminal.addCommand = function addCommand(name, desc, runFunc) {
     if (arguments.length === 2) {
-      runFunc = desc;
-      desc = '';
-    }
-
-    var command = {
-      description: desc
-    };
-
-    if (typeof runFunc === 'string') {
-      command.aliasFor = runFunc;
+      if ($.isFunction(desc)) {
+        if (typeof desc === 'string') {
+          Terminal.addAlias(name, desc);
+        } else {
+          Terminal.addCommand(name, {
+            description: '',
+            run: desc
+          });
+        }
+      } else { // The real version
+        var command = desc;
+        Terminal.Commands[name] = command;
+        if (command.aliases) {
+          command.aliases.forEach(function(alias) {
+            Terminal.addAlias(name, alias);
+          });
+        }
+      }
     } else {
-      command.run = runFunc;
+      Terminal.addCommand(name, {
+        description: desc,
+        run: runFunc
+      });
     }
-    Terminal.Commands[name] = command;
   };
 
   Terminal.Commands = {};

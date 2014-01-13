@@ -46,7 +46,8 @@
       });
 
       Terminal.addCommand('test', {
-        desc: 'Just for testing',
+        aliases: ['testing'],
+        description: 'Just for testing',
         run: function(args, done) {
           this.appendLine('test successful!');
           done();

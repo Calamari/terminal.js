@@ -2,27 +2,39 @@
   'use strict';
 
   Terminal.addCommand('commands', 'Just prints a list of all available commands. Use "help" for more info.', function(args, done) {
-    this.appendLine('All available commands: ' + Object.keys(Terminal.Commands).join(', '));
+    var commands = Object.keys(Terminal.Commands),
+        aliases  = Object.keys(Terminal.Aliases);
+
+    commands = $.merge(commands, aliases);
+
+    this.appendLine('All available commands: ' + commands.sort().join(', '));
     done();
   });
 
   Terminal.addCommand('help', 'Shows all available commands.', function(args, done) {
-    var tab      = new Tabular({
+    var commands     = Object.keys(Terminal.Commands).sort(),
+        tab          = new Tabular({
           newLine: '<br>',
           padding: '&nbsp;',
           gutter:  '&nbsp;&nbsp;'
         }),
-        self     = this,
-        commands = [],
+        self         = this,
+        commandsHelp = [],
         cmdObj;
 
-    $.map(Object.keys(Terminal.Commands), function(cmd) {
+    $.map(commands, function(cmd) {
       cmdObj = Terminal.Commands[cmd]
-      commands.push([cmd, !cmdObj.description && cmdObj.aliasFor ? 'Alias for ' + cmdObj.aliasFor : cmdObj.description]);
+      commandsHelp.push([cmd, cmdObj.description]);
+      if (cmdObj.aliases) {
+        cmdObj.aliases.forEach(function(alias) {
+          commandsHelp.push([alias, 'Alias for ' + cmd]);
+        });
+      }
+
     });
 
     this.appendLine('All available commands: ');
-    this.appendLine(tab.render(commands));
+    this.appendLine(tab.render(commandsHelp));
     done();
   });
 
