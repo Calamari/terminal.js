@@ -245,12 +245,16 @@
     if (!this.hiddenInput) {
       this.hiddenInput = $('<input type="text" style="opacity:0;position: absolute"/>');
       $('body').append(this.hiddenInput);
-      this.hiddenInput.focus();
+      this.focus();
       $('body').on('click', function() {
-        this.hiddenInput.focus();
+        this.focus();
       }.bind(this));
     }
     this.enable();
+  };
+
+  Terminal.prototype.focus = function focus() {
+    this.hiddenInput.focus();
   };
 
   Terminal.prototype.enable = function enable() {
