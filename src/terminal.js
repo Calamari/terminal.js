@@ -114,7 +114,7 @@
     this.registerListeners();
     if (config.onStart) {
       var self = this;
-      config.onStart(function() {
+      config.onStart.call(this, function() {
         self.prompt();
       });
     } else {
