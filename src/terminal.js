@@ -159,7 +159,7 @@
     return result;
   };
 
-  Terminal.prototype.evalInput = function evalInput(input) {
+  Terminal.prototype.evalInput = function evalInput(input, hidden) {
     if (input.trim() === '') {
       return this.prompt();
     }
@@ -170,7 +170,9 @@
         args  = input.substr(cmd.length + 1),
         testedCmd = Terminal.checkRegexCommands(cmd);
 
-    this.history.add(input);
+    if (!hidden) {
+      this.history.add(input);
+    }
 
     if (testedCmd) {
       testedCmd.run.apply(this, [args, function() {
