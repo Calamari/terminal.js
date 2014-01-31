@@ -103,6 +103,7 @@
   var Terminal = function Terminal(element, config) {
     config = config || {};
     this.element = $(element);
+    this.element.css('overflow-y', 'scroll');
 
     this.history = new History({
       sessionKey: (config.sessionKey || 'Terminal') + '.history'
@@ -320,7 +321,7 @@
     this.element.append('<p></p>');
     this.element.find('p:last').append(this.caret);
     // this neat trick scrolls down
-    win.scrollTo(0, $(doc).height());
+    this.hiddenInput[0].scrollIntoView(true);
   };
 
   Terminal.prototype.currentLine = function currentLine() {
