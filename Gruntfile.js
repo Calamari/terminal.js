@@ -18,6 +18,6 @@ module.exports = function(grunt) {
 
   // register tasks for execution chain
   grunt.registerTask('test', [
-    'karma'
+    'karma:multi'
   ]);
 };
