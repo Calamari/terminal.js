@@ -147,11 +147,20 @@
     }
   };
 
-  Terminal.checkRegexCommands = function checkRegexCommands(cmd) {
+  Terminal.removeCommand = function removeCommand(cmd) {
+    if (typeof cmd === 'string') {
+      delete Terminal.Commands[cmd];
+    } else {
+      Terminal.RegexCommands = $.grep(Terminal.RegexCommands, function(rCmd) {
+        return rCmd !== cmd;
+      });
+    }
+  };
+
+  Terminal.checkRegexCommands = function checkRegexCommands(cmd, args) {
     var result = null;
     $.each(Terminal.RegexCommands, function(i, cmdObj) {
-      console.log(arguments);
-      if (cmdObj.test(cmd)) {
+      if (cmdObj.test(cmd, args)) {
         result = cmdObj;
         return true;
       }
@@ -168,24 +177,31 @@
     var split = input.split(' '),
         cmd   = split[0],
         args  = input.substr(cmd.length + 1),
-        testedCmd = Terminal.checkRegexCommands(cmd);
+        testedCmd = Terminal.checkRegexCommands(cmd, args),
+        self      = this;
 
     if (!hidden) {
       this.history.add(input);
     }
 
+    function processCommand() {
+      if (Terminal.Commands[cmd] || Terminal.Aliases[cmd]) {
+        self.runCommand(cmd, [args, function doneCmd() {
+          self.prompt();
+        }]);
+      } else {
+        self.append(cmd + ': Command not found');
+        self.nextLine();
+        self.prompt();
+      }
+    }
+
     if (testedCmd) {
-      testedCmd.run.apply(this, [args, function() {
-        this.prompt();
-      }.bind(this)]);
-    } else if (Terminal.Commands[cmd] || Terminal.Aliases[cmd]) {
-      this.runCommand(cmd, [args, function() {
-        this.prompt();
-      }.bind(this)]);
+      testedCmd.run.apply(this, [args, function doneRegexCmd() {
+        self.prompt();
+      }, processCommand]);
     } else {
-      this.append(cmd + ': Command not found');
-      this.nextLine();
-      this.prompt();
+      processCommand();
     }
   };
 

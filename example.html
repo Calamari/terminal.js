@@ -46,7 +46,7 @@
       });
 
       Terminal.addCommand('test', {
-        aliases: ['testing'],
+        aliases: ['testing', 'testen'],
         description: 'Just for testing',
         run: function(args, done) {
           this.appendLine('test successful!');
@@ -62,6 +62,16 @@
           console.log(args);
           this.appendLine('test overriden!');
           done();
+        }
+      });
+
+      Terminal.addCommand({
+        test: function(cmd) {
+          return /en/.test(cmd);
+        },
+        run: function(args, done, next) {
+          this.appendLine('test before test!');
+          next();
         }
       });
 
