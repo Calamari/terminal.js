@@ -172,5 +172,21 @@ describe('Terminal', function() {
 
       Terminal.removeCommand(cmd);
     });
+
+    it('alias can be added via simple string, string params', function() {
+      Terminal.addCommand('mytest', 'test');
+
+      terminal.evalInput('mytest');
+
+      expect(testCalled).to.equal(true);
+    });
+
+    it('after adding alias the real command still works', function() {
+      Terminal.addCommand('mytest', 'test');
+
+      terminal.evalInput('test');
+
+      expect(testCalled).to.equal(true);
+    });
   });
 });

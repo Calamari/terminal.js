@@ -353,15 +353,13 @@
     if (arguments.length === 1) { // regex command
       Terminal.RegexCommands.push(name);
     } else if (arguments.length === 2) {
-      if ($.isFunction(desc)) {
-        if (typeof desc === 'string') {
-          Terminal.addAlias(name, desc);
-        } else {
-          Terminal.addCommand(name, {
-            description: '',
-            run: desc
-          });
-        }
+      if (typeof desc === 'string') {
+        Terminal.addAlias(desc, name);
+      } else if ($.isFunction(desc)) {
+        Terminal.addCommand(name, {
+          description: '',
+          run: desc
+        });
       } else { // The real version
         var command = desc;
         Terminal.Commands[name] = command;
