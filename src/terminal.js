@@ -328,6 +328,8 @@
     return this.element.find('p:last');
   };
 
+  Terminal.VERSION = VERSION;
+
   /**
    * Contains all defined aliases for faster access
    */

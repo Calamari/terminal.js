@@ -44,7 +44,7 @@
   });
 
   Terminal.addCommand('version', 'Displays the version number of this terminal.', function(args, done) {
-    this.appendLine(VERSION);
+    this.appendLine('Terminal version ' + Terminal.VERSION);
     done();
   });
 
