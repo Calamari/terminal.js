@@ -145,9 +145,11 @@
     try {
       if (Terminal.Commands[cmd]) {
         Terminal.Commands[cmd].run.apply(this, args);
+        return true;
       } else if (Terminal.Aliases[cmd]) {
-        this.runCommand(Terminal.Aliases[cmd], args);
+        return this.runCommand(Terminal.Aliases[cmd], args);
       }
+      return false;
     } catch(ex) {
       if (this.onError) {
         this.onError.call(this, ex);
@@ -195,13 +197,14 @@
     }
 
     function processCommand() {
+      var cmdFound = true;
       if (Terminal.Commands[cmd] || Terminal.Aliases[cmd]) {
-        self.runCommand(cmd, [args, function doneCmd() {
+        cmdFound = self.runCommand(cmd, [args, function doneCmd() {
           self.prompt();
         }]);
-      } else {
-        self.append(cmd + ': Command not found');
-        self.nextLine();
+      }
+      if (!cmdFound) {
+        self.appendLine(cmd + ': Command not found');
         self.prompt();
       }
     }
@@ -219,7 +222,6 @@
     var input = this.hiddenInput.val(),
         self = this,
         caretPos;
-    // console.log("key", event.which, event);
 
     if (this.promptWaiting) {
       switch (event.which) {

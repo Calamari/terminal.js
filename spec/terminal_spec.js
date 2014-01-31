@@ -103,6 +103,10 @@ describe('Terminal', function() {
       terminal = new Terminal('#terminal');
     });
 
+    after(function() {
+      Terminal.removeCommand('test');
+    })
+
     it('added command can be called', function() {
       terminal.evalInput('test');
       expect(testCalled).to.equal(true);
@@ -215,6 +219,27 @@ describe('Terminal', function() {
       terminal.evalInput('test');
 
       expect(testCalled).to.equal(true);
+    });
+  });
+
+  describe('#runCommand', function() {
+    var terminal, onErrorCalled;
+    beforeEach(function() {
+      onErrorCalled = false;
+      terminal = new Terminal('#terminal', {
+        onError: function() {
+          onErrorCalled = true;
+        }
+      });
+    });
+
+    it.only('does not hang up, if an alias is called that points nowhere', function() {
+      Terminal.addCommand('mytest', 'dontexist');
+
+      terminal.evalInput('mytest');
+
+      expect(onErrorCalled).to.equal(false);
+      expect($('#terminal').text()).to.contain('mytest: Command not found');
     });
   });
 });
