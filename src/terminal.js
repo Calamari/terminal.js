@@ -121,6 +121,7 @@
     } else {
       this.prompt();
     }
+    this.onError = config.onError;
   };
 
   Terminal.prototype.createPrompt = function createPrompt(text) {
@@ -141,10 +142,18 @@
   };
 
   Terminal.prototype.runCommand = function runCommand(cmd, args) {
-    if (Terminal.Commands[cmd]) {
-      Terminal.Commands[cmd].run.apply(this, args);
-    } else if (Terminal.Aliases[cmd]) {
-      this.runCommand(Terminal.Aliases[cmd], args);
+    try {
+      if (Terminal.Commands[cmd]) {
+        Terminal.Commands[cmd].run.apply(this, args);
+      } else if (Terminal.Aliases[cmd]) {
+        this.runCommand(Terminal.Aliases[cmd], args);
+      }
+    } catch(ex) {
+      if (this.onError) {
+        this.onError.call(this, ex);
+      } else {
+        throw ex;
+      }
     }
   };
 

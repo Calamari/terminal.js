@@ -30,6 +30,34 @@ describe('Terminal', function() {
     });
   });
 
+  describe('if command throws up', function() {
+    before(function() {
+      Terminal.addCommand('breakingbad', function() {
+        throw new Error('bad');
+      });
+    });
+
+    it('it breaks', function() {
+      var terminal = new Terminal('#terminal');
+      expect(function() {
+        terminal.evalInput('breakingbad');
+      }).to.throw();
+    });
+
+    it('it does not break, when onError is provided', function() {
+      var onErrorCalled = false;
+      var terminal = new Terminal('#terminal', {
+        onError: function() {
+          onErrorCalled = true;
+        }
+      });
+      expect(function() {
+        terminal.evalInput('breakingbad');
+      }).to.not.throw();
+      expect(onErrorCalled).to.equal(true);
+    });
+  });
+
   describe('on initialization', function() {
     beforeEach(function(done) {
       new Terminal('#terminal', {
