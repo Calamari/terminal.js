@@ -197,7 +197,7 @@
     }
 
     function processCommand() {
-      var cmdFound = true;
+      var cmdFound = false;
       if (Terminal.Commands[cmd] || Terminal.Aliases[cmd]) {
         cmdFound = self.runCommand(cmd, [args, function doneCmd() {
           self.prompt();
