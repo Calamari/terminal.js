@@ -328,6 +328,14 @@
     this.nextLine();
   };
 
+  Terminal.prototype.appendLines = function appendLine(lines) {
+    var self = this;
+    lines.forEach(function(line) {
+      self.append(line);
+      self.nextLine();
+    });
+  };
+
   Terminal.prototype.nextLine = function nextLine() {
     this.element.append('<p></p>');
     this.element.find('p:last').append(this.caret);
