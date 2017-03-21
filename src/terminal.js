@@ -277,7 +277,7 @@
   Terminal.prototype.registerListeners = function registerListeners() {
     if (!this.hiddenInput) {
       this.hiddenInput = $('<input type="text" style="opacity:0;position: absolute"/>');
-      $('body').append(this.hiddenInput);
+      this.element.append(this.hiddenInput);
       this.focus();
       $('body').on('click', function() {
         this.focus();
@@ -342,8 +342,7 @@
   Terminal.prototype.nextLine = function nextLine() {
     this.element.append('<p></p>');
     this.element.find('p:last').append(this.caret);
-    // this neat trick scrolls down
-    this.hiddenInput[0].scrollIntoView(true);
+    this.element[0].scrollTop = this.element[0].scrollHeight;
   };
 
   Terminal.prototype.currentLine = function currentLine() {
